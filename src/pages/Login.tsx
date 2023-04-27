@@ -1,9 +1,18 @@
 import { useRef, useState, useEffect } from "react";
 import useAuth from "@/hook/useAuth";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "../api/axios";
+import jwt_decode from "jwt-decode";
 
 const LOGIN_URL = "/auth";
+interface AccessTokenPayload {
+  userInfo: {
+    userName: string;
+    roles: number[];
+  };
+  iat: number;
+  exp: number;
+}
 
 const Login = () => {
   const { setAuth } = useAuth();
@@ -44,7 +53,10 @@ const Login = () => {
       );
       console.log(response);
       const accessToken = response?.data?.accessToken;
-      const roles = response?.data?.roles;
+      const decoded: AccessTokenPayload = jwt_decode(
+        response?.data?.accessToken
+      );
+      const roles = decoded.userInfo.roles;
       setAuth({
         user,
         pwd,
