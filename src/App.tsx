@@ -1,14 +1,19 @@
 import { Routes, Route } from "react-router-dom";
-import Login from "./components/Login";
+
 import Layout from "./components/Layout";
-import Admin from "./components/Admin";
-import Editor from "./components/Editor";
-import Home from "./components/Home";
-import LinkPage from "./components/LinkPage";
-import Lounge from "./components/Lounge";
-import Missing from "./components/Missing";
-import Register from "./components/Register";
-import Unauthorized from "./components/Unauthorized";
+import RequireAuth from "./components/RequireAuth";
+
+import Login from "./pages/Login";
+import Admin from "./pages/Admin";
+import Editor from "./pages/Editor";
+import Home from "./pages/Home";
+import LinkPage from "./pages/LinkPage";
+import Lounge from "./pages/Lounge";
+import Missing from "./pages/Missing";
+import Register from "./pages/Register";
+import Unauthorized from "./pages/Unauthorized";
+
+import { ROLE } from "./enum/Role";
 
 function App() {
   return (
@@ -21,10 +26,23 @@ function App() {
         <Route path="unauthorized" element={<Unauthorized />} />
 
         {/* protected routes */}
-        <Route path="/" element={<Home />} />
-        <Route path="editor" element={<Editor />} />
-        <Route path="admin" element={<Admin />} />
-        <Route path="lounge" element={<Lounge />} />
+        <Route element={<RequireAuth allowedRoles={[ROLE.USER]} />}>
+          <Route path="/" element={<Home />} />
+        </Route>
+
+        <Route element={<RequireAuth allowedRoles={[ROLE.EDITOR]} />}>
+          <Route path="editor" element={<Editor />} />
+        </Route>
+
+        <Route element={<RequireAuth allowedRoles={[ROLE.ADMIN]} />}>
+          <Route path="admin" element={<Admin />} />
+        </Route>
+
+        <Route
+          element={<RequireAuth allowedRoles={[ROLE.EDITOR, ROLE.ADMIN]} />}
+        >
+          <Route path="lounge" element={<Lounge />} />
+        </Route>
 
         {/* catch all */}
         <Route path="*" element={<Missing />} />
