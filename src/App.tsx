@@ -1,5 +1,11 @@
+import Login from "./Login";
+
 function App() {
-  return <>Hello</>;
+  return (
+    <main className="App">
+      <Login />
+    </main>
+  );
 }
 
 export default App;
