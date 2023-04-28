@@ -67,6 +67,7 @@ const Login = () => {
       setUser("");
       setPwd("");
 
+      // send user back where they came from
       navigate(from, { replace: true });
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
