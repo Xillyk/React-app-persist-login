@@ -12,6 +12,7 @@ import Lounge from "./pages/Lounge";
 import Missing from "./pages/Missing";
 import Register from "./pages/Register";
 import Unauthorized from "./pages/Unauthorized";
+import PersistLogin from "./components/PersistLogin";
 
 import { ROLE } from "./enum/Role";
 
@@ -26,22 +27,24 @@ function App() {
         <Route path="unauthorized" element={<Unauthorized />} />
 
         {/* protected routes */}
-        <Route element={<RequireAuth allowedRoles={[ROLE.USER]} />}>
-          <Route path="/" element={<Home />} />
-        </Route>
+        <Route element={<PersistLogin />}>
+          <Route element={<RequireAuth allowedRoles={[ROLE.USER]} />}>
+            <Route path="/" element={<Home />} />
+          </Route>
 
-        <Route element={<RequireAuth allowedRoles={[ROLE.EDITOR]} />}>
-          <Route path="editor" element={<Editor />} />
-        </Route>
+          <Route element={<RequireAuth allowedRoles={[ROLE.EDITOR]} />}>
+            <Route path="editor" element={<Editor />} />
+          </Route>
 
-        <Route element={<RequireAuth allowedRoles={[ROLE.ADMIN]} />}>
-          <Route path="admin" element={<Admin />} />
-        </Route>
+          <Route element={<RequireAuth allowedRoles={[ROLE.ADMIN]} />}>
+            <Route path="admin" element={<Admin />} />
+          </Route>
 
-        <Route
-          element={<RequireAuth allowedRoles={[ROLE.EDITOR, ROLE.ADMIN]} />}
-        >
-          <Route path="lounge" element={<Lounge />} />
+          <Route
+            element={<RequireAuth allowedRoles={[ROLE.EDITOR, ROLE.ADMIN]} />}
+          >
+            <Route path="lounge" element={<Lounge />} />
+          </Route>
         </Route>
 
         {/* catch all */}
