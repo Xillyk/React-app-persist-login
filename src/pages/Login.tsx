@@ -1,8 +1,10 @@
 import { useRef, useState, useEffect } from "react";
 import useAuth from "@/hook/useAuth";
 import { useNavigate, useLocation } from "react-router-dom";
-import axios from "../api/axios";
+import axios from "@/api/axios";
 import jwt_decode from "jwt-decode";
+import useInput from "@/hook/useInput";
+import useToggle from "@/hook/useToggle";
 
 const LOGIN_URL = "/auth";
 interface AccessTokenPayload {
@@ -15,7 +17,7 @@ interface AccessTokenPayload {
 }
 
 const Login = () => {
-  const { setAuth, persist, setPersist } = useAuth();
+  const { setAuth } = useAuth();
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,9 +28,10 @@ const Login = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const errRef = useRef<any>(null);
 
-  const [user, setUser] = useState("");
+  const [user, resetUser, userAttributeObj] = useInput("user", ""); //useState("");
   const [pwd, setPwd] = useState("");
   const [errMsg, setErrMsg] = useState("");
+  const [check, toggleCheck] = useToggle("persist", false);
 
   useEffect(() => {
     userRef?.current?.focus();
@@ -59,12 +62,12 @@ const Login = () => {
       const roles = decoded.userInfo.roles;
       setAuth({
         user,
-        pwd,
         roles,
         accessToken,
       });
 
-      setUser("");
+      // setUser("");
+      resetUser();
       setPwd("");
 
       // send user back where they came from
@@ -85,13 +88,13 @@ const Login = () => {
     }
   };
 
-  const togglePersist = () => {
-    setPersist((prev: boolean) => !prev);
-  };
+  // const togglePersist = () => {
+  //   setPersist((prev: boolean) => !prev);
+  // };
 
-  useEffect(() => {
-    localStorage.setItem("persist", persist);
-  }, [persist]);
+  // useEffect(() => {
+  //   localStorage.setItem("persist", persist);
+  // }, [persist]);
 
   return (
     <section>
@@ -110,8 +113,9 @@ const Login = () => {
           id="username"
           ref={userRef}
           autoComplete="off"
-          onChange={(e) => setUser(e.target.value)}
-          value={user}
+          // onChange={(e) => setUser(e.target.value)}
+          // value={user}
+          {...(userAttributeObj as object)}
           required
         />
 
@@ -128,8 +132,8 @@ const Login = () => {
           <input
             type="checkbox"
             id="persist"
-            onChange={togglePersist}
-            checked={persist}
+            onChange={toggleCheck}
+            checked={check}
           />
           <label htmlFor="persist">Trust This Device</label>
         </div>
