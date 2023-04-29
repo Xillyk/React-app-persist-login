@@ -10,12 +10,13 @@ interface Props {
 export const AuthProvider = ({ children }: Props) => {
   const [auth, setAuth] = useState({});
 
-  const [persist, setPersist] = useState(
-    JSON.parse(localStorage.getItem("persist") as string) || false
-  );
+  // use useLocalStorage instead
+  // const [persist, setPersist] = useState(
+  //   JSON.parse(localStorage.getItem("persist") as string) || false
+  // );
 
   return (
-    <AuthContext.Provider value={{ auth, setAuth, persist, setPersist }}>
+    <AuthContext.Provider value={{ auth, setAuth }}>
       {children}
     </AuthContext.Provider>
   );
